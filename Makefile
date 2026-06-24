@@ -16,10 +16,10 @@ nsxiv_cppflags = -D_XOPEN_SOURCE=700 \
 
 nsxiv_ldlibs = -lImlib2 -lX11 \
   $(lib_exif_$(HAVE_LIBEXIF)) $(lib_fonts_$(HAVE_LIBFONTS)) \
-  $(LDLIBS)
+  $(LDLIBS) -lm
 
 objs = autoreload.o commands.o image.o main.o options.o \
-  thumbs.o util.o window.o
+  thumbs.o util.o window.o wallpaper.o
 
 .SUFFIXES:
 .SUFFIXES: .c .o

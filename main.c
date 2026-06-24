@@ -21,6 +21,7 @@
 #define INCLUDE_MAPPINGS_CONFIG
 #include "commands.h"
 #include "config.h"
+#include "wallpaper.h"
 
 #include <assert.h>
 #include <errno.h>
@@ -918,6 +919,13 @@ int main(int argc, char *argv[])
 	setlocale(LC_COLLATE, "");
 
 	parse_options(argc, argv);
+
+	if (options->bg_fill) {
+		printf("Setting wallpaper: %s\n", options->bg_file);
+		set_wallpaper_fill(options->bg_file);
+		return 0;
+	}
+
 
 	if (options->clean_cache) {
 		tns_init(&tns, NULL, NULL, NULL, NULL);

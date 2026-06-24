@@ -42,7 +42,7 @@ const opt_t *options;
 void print_usage(FILE *stream)
 {
 	fprintf(stream,
-	        "usage: %s [-abcfHhiopqrtvZ0] [-A FRAMERATE] [-e WID] [-G GAMMA] "
+	        "usage: %s [-abcfHhiopqrtvZ0B] [-A FRAMERATE] [-e WID] [-G GAMMA] "
 	        "[-g GEOMETRY] [-N NAME] [-n NUM] [-S DELAY] [-s MODE] "
 	        "[-z ZOOM] FILES...\n",
 	        progname);
@@ -169,6 +169,9 @@ void parse_options(int argc, char **argv)
 	_options.update_cache = false;
 	_options.private_mode = false;
 
+	_options.bg_fill = false;
+	_options.bg_file = NULL;
+
 	if (argc > 0) {
 		s = strrchr(argv[0], '/');
 		progname = s != NULL && s[1] != '\0' ? s + 1 : argv[0];
@@ -181,6 +184,10 @@ void parse_options(int argc, char **argv)
 				assert(op.optarg != NULL);
 		}
 		switch (opt) {
+		case 'B':
+			_options.bg_fill = true;
+                	_options.bg_file = optarg;
+                	break;
 		case '?':
 			fprintf(stderr, "%s\n", op.errmsg);
 			print_usage(stderr);

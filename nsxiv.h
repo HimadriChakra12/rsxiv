@@ -282,6 +282,8 @@ struct opt {
 	bool clean_cache;
 	bool update_cache;
 	bool private_mode;
+	bool bg_fill;
+	char *bg_file;
 };
 
 extern const opt_t *options;
