@@ -36,6 +36,10 @@ Features
 * Displaying image information in status bar via `image-info` & `thumb-info`
 * Customizable window title via `win-title`
 
+Himbuild Confs
+--------
+
+* **[wallpaper.c](https://github.com/HimadriChakra12/hsxiv/commit/c4e966b82e4be88c05408db8f2dd3a7fd9c3a760) + [wallpaper.h](https://github.com/HimadriChakra12/hsxiv/commit/29058c4d8ca36c98a02042213106f4d2671a0bc0)** -> wallpaper arg "-B" (cause I don't want to use feh "another image viewer" to manage my wallpaper)
 
 Screenshots
 -----------
