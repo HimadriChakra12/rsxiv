@@ -1,6 +1,10 @@
 .POSIX:
+include rsxiv.mk
 
-include config.mk
+BOLD   = \033[1m
+CYAN   = \033[1;36m
+GREEN  = \033[1;32m
+RESET  = \033[0m
 
 inc_fonts_0 =
 inc_fonts_1 = -I/usr/include/freetype2 -I$(PREFIX)/include/freetype2
@@ -12,7 +16,7 @@ lib_exif_1 = -lexif
 rsxiv_cppflags = -D_XOPEN_SOURCE=700 \
   -DHAVE_LIBEXIF=$(HAVE_LIBEXIF) -DHAVE_LIBFONTS=$(HAVE_LIBFONTS) \
   -DHAVE_INOTIFY=$(HAVE_INOTIFY) $(inc_fonts_$(HAVE_LIBFONTS)) \
-  $(CPPFLAGS)
+  $(CPPFLAGS) -MMD -MP
 
 rsxiv_ldlibs = -lImlib2 -lX11 \
   $(lib_exif_$(HAVE_LIBEXIF)) $(lib_fonts_$(HAVE_LIBFONTS)) \
@@ -20,27 +24,58 @@ rsxiv_ldlibs = -lImlib2 -lX11 \
 
 objs = autoreload.o commands.o image.o main.o options.o \
   thumbs.o util.o window.o wallpaper.o
+deps = $(objs:.o=.d)
 
 .SUFFIXES:
 .SUFFIXES: .c .o
 
+define compile_c
+	@t0=$$(date +%s%N); \
+	out=$$($(CC) $(CFLAGS) $(rsxiv_cppflags) -c -o $@ $< 2>&1); rc=$$?; \
+	t1=$$(date +%s%N); ms=$$(( (t1 - t0) / 1000000 )); \
+	( \
+		flock -w 10 200; \
+		if [ $$rc -eq 0 ]; then \
+			printf "$(GREEN)%-8s$(RESET) $(BOLD)%-30s$(RESET) %-30s\t$(CYAN)%dms$(RESET)\n" \
+				"$(CC)" "$<" "$@" "$$ms"; \
+		else \
+			printf "$(GREEN)%-8s$(RESET) $(BOLD)%-30s$(RESET) FAILED\t$(CYAN)%dms$(RESET)\n" \
+				"$(CC)" "$<" "$$ms"; \
+			printf "%s\n" "$$out"; \
+		fi \
+	) 200>/tmp/.rsxiv-build.lock; \
+	exit $$rc
+endef
+
+define link_bin
+	@t=$$(date +%s%N); \
+	printf " $(GREEN)link$(RESET)%-4s$(BOLD)$@$(RESET) %-58s"; \
+	$(CC) $(LDFLAGS) -o $@ $(objs) $(rsxiv_ldlibs); \
+	rc=$$?; \
+	ms=$$(( ($$(date +%s%N) - t) / 1000000 )); \
+	[ $$rc -eq 0 ] && printf "$(CYAN)%dms$(RESET)\n" $$ms || exit $$rc
+endef
+
+.PHONY: all bench clean distclean install install-all install-desktop \
+        install-icon uninstall uninstall-icon dump_cppflags
+
 all: rsxiv
 
 rsxiv: $(objs)
-	@echo "LINK $@"
-	$(CC) $(LDFLAGS) -o $@ $(objs) $(rsxiv_ldlibs)
+	$(call link_bin)
 
 .c.o:
-	@echo "CC $@"
-	$(CC) $(CFLAGS) $(rsxiv_cppflags) -c -o $@ $<
+	$(call compile_c)
 
 $(objs): Makefile config.mk rsxiv.h config.h commands.h
 options.o: version.h optparse.h
 window.o: icon/data.h utf8.h
 
+-include $(deps)
+
 config.h:
 	@echo "GEN $@"
-	cp config.def.h $@
+	@cp config.def.h $@
 
 version.h: config.mk .git/index
 	@v="$$(git describe 2>/dev/null || true)"; \
@@ -52,11 +87,26 @@ version.h: config.mk .git/index
 
 .git/index:
 
+bench:
+	@t=$$(date +%s%N); \
+	$(MAKE) --no-print-directory rsxiv; \
+	rc=$$?; \
+	ms=$$(( ($$(date +%s%N) - t) / 1000000 )); \
+	if [ $$rc -eq 0 ]; then \
+		printf "\n$(BOLD)Build finished in$(RESET) $(CYAN)%dms$(RESET)\n" $$ms; \
+	else \
+		exit $$rc; \
+	fi
+
 dump_cppflags:
 	@echo $(rsxiv_cppflags)
 
 clean:
-	rm -f *.o rsxiv version.h
+	rm -f *.o *.d rsxiv version.h
+	@printf "$(GREEN)CLEANED$(RESET)\n"
+
+distclean: clean
+	rm -f config.h
 
 install-all: install install-desktop install-icon
 
@@ -105,4 +155,3 @@ uninstall: uninstall-icon
 	rm -f $(DESTDIR)$(PREFIX)/share/applications/rsxiv.desktop
 	@echo "REMOVE share/rsxiv/"
 	rm -rf $(DESTDIR)$(EGPREFIX)
-
