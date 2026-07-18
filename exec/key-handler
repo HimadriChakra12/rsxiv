@@ -115,7 +115,7 @@ case "$1" in
     ;;
 "c")
     while read -r file; do
-        "$HOME/.config/rsxiv/exec/crop.py" $file
+        cropgui $file
     done
     ;;
 "C-e")
