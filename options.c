@@ -93,6 +93,7 @@ void parse_options(int argc, char **argv)
 	static const struct optparse_long longopts[] = {
 		{ "framerate",      'A',     OPTPARSE_REQUIRED },
 		{ "animate",        'a',     OPTPARSE_NONE },
+		{ "bg-fill",        'B',     OPTPARSE_REQUIRED },
 		{ "assume-files",  OPT_AF,   OPTPARSE_NONE },
 		{ "no-bar",         'b',     OPTPARSE_NONE },
 		{ "bar",          OPT_BAR,   OPTPARSE_NONE },
@@ -186,8 +187,8 @@ void parse_options(int argc, char **argv)
 		switch (opt) {
 		case 'B':
 			_options.bg_fill = true;
-                	_options.bg_file = optarg;
-                	break;
+			_options.bg_file = op.optarg;
+			break;
 		case '?':
 			fprintf(stderr, "%s\n", op.errmsg);
 			print_usage(stderr);
