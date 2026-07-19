@@ -142,7 +142,7 @@ void parse_options(int argc, char **argv)
 	_options.from_stdin = false;
 	_options.to_stdout = false;
 	_options.using_null = false;
-	_options.recursive = false;
+	_options.recursive = RECURSIVE;
 	_options.include_hidden = false;
 	_options.startnum = 0;
 	_options.assume_files = false;
@@ -151,14 +151,14 @@ void parse_options(int argc, char **argv)
 	_options.zoom = 1.0;
 	_options.anti_alias = ANTI_ALIAS;
 	_options.alpha_layer = ALPHA_LAYER;
-	_options.animate = false;
+	_options.animate = ANIMATE;
 	_options.gamma = 0;
 	_options.slideshow = 0;
 	_options.framerate = 0;
 
-	_options.fullscreen = false;
+	_options.fullscreen = FULLSCREEN;
 	_options.embed = 0;
-	_options.hide_bar = false;
+	_options.hide_bar = HIDE_BAR;
 	_options.geometry = NULL;
 	_options.res_name = NULL;
 

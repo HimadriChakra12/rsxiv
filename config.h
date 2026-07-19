@@ -37,6 +37,11 @@ static const int CACHE_SIZE_FALLBACK = 32 * 1024 * 1024; /* fallback to 32MiB if
 #endif
 #ifdef INCLUDE_OPTIONS_CONFIG
 
+static const bool FULLSCREEN = true;
+static const bool BAR        = true;
+static const bool ANIMATE    = true;
+static const bool RECURSIVE  = true;
+
 static const bool ANTI_ALIAS = true;
 static const bool ALPHA_LAYER = false;
 static const char TNS_FILTERS[] = "";

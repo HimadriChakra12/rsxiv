@@ -56,8 +56,7 @@ define link_bin
 	[ $$rc -eq 0 ] && printf "$(CYAN)%dms$(RESET)\n" $$ms || exit $$rc
 endef
 
-.PHONY: all bench clean distclean install install-all install-desktop \
-        install-icon uninstall uninstall-icon dump_cppflags
+.PHONY: all bench clean distclean install uninstall dump_cppflags
 
 all: rsxiv
 
@@ -108,34 +107,10 @@ clean:
 distclean: clean
 	rm -f config.h
 
-install-all: install install-desktop install-icon
-
-install-desktop:
-	@echo "INSTALL rsxiv.desktop"
-	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
-	cp etc/rsxiv.desktop $(DESTDIR)$(PREFIX)/share/applications
-
-install-icon:
-	@echo "INSTALL icon"
-	for f in $(ICONS); do \
-		dir="$(DESTDIR)$(PREFIX)/share/icons/hicolor/$${f%.png}/apps"; \
-		mkdir -p "$$dir"; \
-		cp "icon/$$f" "$$dir/rsxiv.png"; \
-		chmod 644 "$$dir/rsxiv.png"; \
-	done
-
-uninstall-icon:
-	@echo "REMOVE icon"
-	for f in $(ICONS); do \
-		dir="$(DESTDIR)$(PREFIX)/share/icons/hicolor/$${f%.png}/apps"; \
-		rm -f "$$dir/rsxiv.png"; \
-	done
-
 install: all
 	@echo "INSTALL bin/rsxiv"
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp rsxiv $(DESTDIR)$(PREFIX)/bin/
-	cp etc/rsxiv.desktop /usr/share/applications/rsxiv.desktop
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/rsxiv
 	@echo "INSTALL rsxiv.1"
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
@@ -146,8 +121,18 @@ install: all
 	mkdir -p $(DESTDIR)$(EGPREFIX)
 	cp etc/examples/* $(DESTDIR)$(EGPREFIX)
 	chmod 755 $(DESTDIR)$(EGPREFIX)/*
+	@echo "INSTALL rsxiv.desktop"
+	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
+	cp etc/rsxiv.desktop $(DESTDIR)$(PREFIX)/share/applications/
+	@echo "INSTALL icon"
+	for f in $(ICONS); do \
+		dir="$(DESTDIR)$(PREFIX)/share/icons/hicolor/$${f%.png}/apps"; \
+		mkdir -p "$$dir"; \
+		cp "icon/$$f" "$$dir/rsxiv.png"; \
+		chmod 644 "$$dir/rsxiv.png"; \
+	done
 
-uninstall: uninstall-icon
+uninstall:
 	@echo "REMOVE bin/rsxiv"
 	rm -f $(DESTDIR)$(PREFIX)/bin/rsxiv
 	@echo "REMOVE rsxiv.1"

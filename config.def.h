@@ -60,6 +60,21 @@ static const int CACHE_SIZE_FALLBACK = 32 * 1024 * 1024; /* fallback to 32MiB if
 #endif
 #ifdef INCLUDE_OPTIONS_CONFIG
 
+/* if false, it will be windows
+ * toggled with 'f' key binding (overwritten via `-f` option)
+ */
+static const bool FULLSCREEN = true;
+/* if false, the bar will be hidden
+ * toggled with 'b' key binding
+ */
+static const bool HIDE_BAR   = true;
+/* if false, it will be windows
+ * toggled with 'ctrl+a' key binding
+ */
+static const bool ANIMATE    = true;
+
+static const bool RECURSIVE  = true;
+
 /* if false, pixelate images at zoom level != 100%,
  * toggled with 'a' key binding (overwritten via `--anti-alias` option)
  */

@@ -1,6 +1,6 @@
+#!/bin/sh
 make clean
 make
-sudo make install-all
-rm -rf $HOME/.config/rsxiv
+sudo make install
 mkdir -p $HOME/.config/rsxiv/
-ln -s $(pwd)/exec $HOME/.config/rsxiv/exec
+[ -L $HOME/.config/rsxiv/exec ] || ln -s $(pwd)/exec $HOME/.config/rsxiv/exec
