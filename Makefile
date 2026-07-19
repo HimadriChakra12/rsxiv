@@ -135,7 +135,7 @@ install: all
 	@echo "INSTALL bin/rsxiv"
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp rsxiv $(DESTDIR)$(PREFIX)/bin/
-	install -Dm644 etc/rsxiv.desktop /usr/share/applications/rsxiv.desktop
+	cp etc/rsxiv.desktop /usr/share/applications/rsxiv.desktop
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/rsxiv
 	@echo "INSTALL rsxiv.1"
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
