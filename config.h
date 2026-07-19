@@ -38,7 +38,7 @@ static const int CACHE_SIZE_FALLBACK = 32 * 1024 * 1024; /* fallback to 32MiB if
 #ifdef INCLUDE_OPTIONS_CONFIG
 
 static const bool FULLSCREEN = true;
-static const bool BAR        = true;
+static const bool HIDE_BAR   = true;
 static const bool ANIMATE    = true;
 static const bool RECURSIVE  = true;
 
