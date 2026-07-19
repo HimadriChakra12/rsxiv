@@ -69,7 +69,7 @@ static const bool FULLSCREEN = true;
  */
 static const bool HIDE_BAR   = true;
 /* if false, it will be windows
- * toggled with 'ctrl+a' key binding
+ * toggled with 'ctrl+a' key binding (overwritten via `-a/--animate` option)
  */
 static const bool ANIMATE    = true;
 
